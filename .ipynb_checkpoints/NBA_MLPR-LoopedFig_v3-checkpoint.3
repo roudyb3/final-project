@@ -1,0 +1,724 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "4ae6af31",
+   "metadata": {},
+   "source": [
+    "### Data Import"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 41,
+   "id": "92edbbce",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Season</th>\n",
+       "      <th>Player</th>\n",
+       "      <th>Pos</th>\n",
+       "      <th>Age</th>\n",
+       "      <th>Tm</th>\n",
+       "      <th>G</th>\n",
+       "      <th>GS</th>\n",
+       "      <th>MPG</th>\n",
+       "      <th>PPG</th>\n",
+       "      <th>RPG</th>\n",
+       "      <th>...</th>\n",
+       "      <th>TS%</th>\n",
+       "      <th>USG%</th>\n",
+       "      <th>OWS</th>\n",
+       "      <th>DWS</th>\n",
+       "      <th>WS</th>\n",
+       "      <th>WS48</th>\n",
+       "      <th>OBPM</th>\n",
+       "      <th>DBPM</th>\n",
+       "      <th>BPM</th>\n",
+       "      <th>VORP</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>2009</td>\n",
+       "      <td>Arron Afflalo</td>\n",
+       "      <td>SG</td>\n",
+       "      <td>24.0</td>\n",
+       "      <td>DEN</td>\n",
+       "      <td>82.0</td>\n",
+       "      <td>75.0</td>\n",
+       "      <td>27.085366</td>\n",
+       "      <td>8.829268</td>\n",
+       "      <td>3.073171</td>\n",
+       "      <td>...</td>\n",
+       "      <td>0.576</td>\n",
+       "      <td>14.0</td>\n",
+       "      <td>2.8</td>\n",
+       "      <td>1.4</td>\n",
+       "      <td>4.3</td>\n",
+       "      <td>0.092</td>\n",
+       "      <td>0.8</td>\n",
+       "      <td>-0.5</td>\n",
+       "      <td>0.3</td>\n",
+       "      <td>1.3</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>2009</td>\n",
+       "      <td>Alexis Ajinca</td>\n",
+       "      <td>C</td>\n",
+       "      <td>21.0</td>\n",
+       "      <td>CHA</td>\n",
+       "      <td>6.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>5.000000</td>\n",
+       "      <td>1.666667</td>\n",
+       "      <td>0.666667</td>\n",
+       "      <td>...</td>\n",
+       "      <td>0.479</td>\n",
+       "      <td>19.3</td>\n",
+       "      <td>-0.1</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>-0.013</td>\n",
+       "      <td>-8.5</td>\n",
+       "      <td>-2.0</td>\n",
+       "      <td>-10.4</td>\n",
+       "      <td>-0.1</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "<p>2 rows × 36 columns</p>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "   Season         Player Pos   Age   Tm     G    GS        MPG       PPG  \\\n",
+       "0    2009  Arron Afflalo  SG  24.0  DEN  82.0  75.0  27.085366  8.829268   \n",
+       "1    2009  Alexis Ajinca   C  21.0  CHA   6.0   0.0   5.000000  1.666667   \n",
+       "\n",
+       "        RPG  ...    TS%  USG%  OWS  DWS   WS   WS48  OBPM  DBPM   BPM  VORP  \n",
+       "0  3.073171  ...  0.576  14.0  2.8  1.4  4.3  0.092   0.8  -0.5   0.3   1.3  \n",
+       "1  0.666667  ...  0.479  19.3 -0.1  0.0  0.0 -0.013  -8.5  -2.0 -10.4  -0.1  \n",
+       "\n",
+       "[2 rows x 36 columns]"
+      ]
+     },
+     "execution_count": 41,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "import pandas as pd\n",
+    "\n",
+    "nba_data = pd.read_csv(r\"seasons_clean.csv\")\n",
+    "nba_data.rename(columns={\"WS/48\":\"WS48\"}, inplace=True)\n",
+    "nba_data.head(2)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "2a83452d",
+   "metadata": {},
+   "source": [
+    "### Selecting columns/stats to keep in dataset "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 42,
+   "id": "9cd64253",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Stat list \n",
+      "*******\n",
+      "Index(['MPG', 'Season', 'Player', 'Age', 'G', 'GS', 'PPG', 'RPG', 'APG', 'SPG',\n",
+      "       'BPG', 'TOPG', 'FG', 'FG%', '3P', '3P%', 'FT', 'FT%', 'PFPG', 'TS%',\n",
+      "       'USG%', 'OWS'],\n",
+      "      dtype='object')\n",
+      "\n",
+      "\n",
+      "Output list \n",
+      "*******\n",
+      "Index(['Season', 'PER', 'WS', 'WS48', 'BPM', 'VORP'], dtype='object')\n"
+     ]
+    }
+   ],
+   "source": [
+    "stat_list = [7,0,1,3,5,6,8,9,10,11,12,13,15,17,18,20,21,23,24,26,27,28]\n",
+    "output_list = [0,25,30,31,34,35]\n",
+    "\n",
+    "print(f'Stat list \\n*******\\n{nba_data.columns[stat_list]}')\n",
+    "print(f'\\n\\nOutput list \\n*******\\n{nba_data.columns[output_list]}')"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "54de87f0",
+   "metadata": {},
+   "source": [
+    "### Defining X y datasets "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 43,
+   "id": "71809d10",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Defining dataset of chosen stats \n",
+    "# (filtering out players with less than half a quarter of play)\n",
+    "nba_X = nba_data.loc[nba_data['MPG'] > 6].iloc[:,stat_list]\n",
+    "nba_X = nba_X[nba_X['Season'] != 2018].drop(columns=[\"Season\",\"Player\"])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 129,
+   "id": "c7694a56",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Reserving the 2018 season for \"production\"\n",
+    "nba_2018_prod = nba_data.loc[nba_data['MPG'] > 6].iloc[:,stat_list]\n",
+    "nba_2018_prod = nba_2018_prod[nba_2018_prod['Season'] == 2018].drop(columns=[\"Season\"])\n",
+    "nba_2018_prod\n",
+    "\n",
+    "nba_mean = nba_2018_prod.mean()\n",
+    "nba_mean_df = pd.DataFrame(nba_mean).T\n",
+    "\n",
+    "# Appending the 2018 league mean stats to Production dataset\n",
+    "idx = 1\n",
+    "NBA_Mean = \"NBA Mean\"  \n",
+    "nba_mean_df.insert(loc=idx, column='Player', value=NBA_Mean)\n",
+    "nba_2018_prod = pd.concat([nba_2018_prod, nba_mean_df])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "id": "2e79810e",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Defining output dataset for y_train/y_test of chosen outputs \n",
+    "# (filtering out players with less than half a quarter of play)\n",
+    "nba_y = nba_data.loc[nba_data['MPG'] > 6].iloc[:,output_list]\n",
+    "nba_y = nba_y[nba_y['Season'] != 2018].drop(columns=[\"Season\"])"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "023c2451",
+   "metadata": {},
+   "source": [
+    "### Build Regressor Function "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 174,
+   "id": "5e179435",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import matplotlib.pyplot as plt\n",
+    "\n",
+    "from sklearn.utils._testing import ignore_warnings\n",
+    "from sklearn.exceptions import ConvergenceWarning\n",
+    "from sklearn.preprocessing import StandardScaler\n",
+    "from sklearn.model_selection import train_test_split\n",
+    "from sklearn.inspection import permutation_importance\n",
+    "\n",
+    "from joblib import dump, load\n",
+    "\n",
+    "@ignore_warnings(category=ConvergenceWarning)\n",
+    "def Regressor(X,y):\n",
+    "    \n",
+    "    ### Starting data-modeling process \n",
+    "\n",
+    "    X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=rand)\n",
+    "\n",
+    "    ### Select Player \n",
+    "    \n",
+    "    # Selecting a random player from test data set\n",
+    "    X_player = X_test.sample(n=1, random_state=42)\n",
+    "\n",
+    "    season,player,pos = nba_data.iloc[X_player.index.values[0],0:3]\n",
+    "    print(f'The {output} for {player} ({pos}, {season})')\n",
+    "\n",
+    "    ### Scaling data \n",
+    "\n",
+    "    # Create a StandardScater model and fit it to the training data\n",
+    "    X_scaler = StandardScaler().fit(X_train)\n",
+    "\n",
+    "    # Transform the training and testing data using the X_scaler\n",
+    "    X_train_scaled = X_scaler.transform(X_train)\n",
+    "    X_test_scaled = X_scaler.transform(X_test)\n",
+    "\n",
+    "    ### Model fit and score\n",
+    "\n",
+    "    from sklearn.neural_network import MLPRegressor\n",
+    "    model = MLPRegressor()   \n",
+    "    \n",
+    "    model.fit(X_train_scaled, y_train)\n",
+    "    training_score = model.score(X_train_scaled, y_train)\n",
+    "    testing_score = model.score(X_test_scaled, y_test)\n",
+    "    \n",
+    "    print(f\"Training Score: {training_score.round(3)}\")\n",
+    "    print(f\"Testing Score: {testing_score.round(3)}\")\n",
+    "\n",
+    "    \n",
+    "    # Permutation Importance\n",
+    "    r = permutation_importance(model, X_test_scaled, y_test,\n",
+    "                               n_repeats=30,\n",
+    "                               random_state=0)\n",
+    "\n",
+    "    for i in r.importances_mean.argsort()[::-1]:\n",
+    "        if r.importances_mean[i] - 2 * r.importances_std[i] > 0:\n",
+    "#         if i == len(r.importances_mean)-1:    \n",
+    "            print(f\"Importance (Highest): {X_test.columns[i]}({r.importances_mean[i]:.3f})\\n\"\n",
+    "                  f\"Importance ({X_test.columns[0]}): ({r.importances_mean[0]:.3f})\")\n",
+    "#                   f\" +/- {r.importances_std[i]:.3f}\")\n",
+    "        break \n",
+    "    \n",
+    "    ### SAVE MODEL\n",
+    "    \n",
+    "    dump(model, f'Model/model_NBA_{output}.joblib') \n",
+    "    \n",
+    "    ### Running the Loop\n",
+    "\n",
+    "    max_mpg = int(nba_X[\"MPG\"].max())\n",
+    "    PER_list = list()\n",
+    "\n",
+    "    # Building predictions based on each minute of MPG\n",
+    "    for i in range(7,max_mpg+1):\n",
+    "        X_player[\"MPG\"] = i\n",
+    "        X_player_scaled = X_scaler.transform(X_player)\n",
+    "        y_player = model.predict(X_player_scaled)\n",
+    "\n",
+    "        PER_list.append(y_player[0])\n",
+    "\n",
+    "    ### PLOT THE RESULTS\n",
+    "    \n",
+    "    plt.scatter(range(7,max_mpg+1), PER_list, c=\"blue\", label=f\"{output} by Minute\")\n",
+    "    plt.legend()\n",
+    "    plt.title(f\"Test Data - MPG vs. {output} for {player}\")\n",
+    "    plt.savefig(fname=f\"Figures/{output}_test\",facecolor=\"white\")\n",
+    "    \n",
+    "    ### Clear the figure for loop\n",
+    "    \n",
+    "    plt.clf()\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "18d59a2d",
+   "metadata": {},
+   "source": [
+    "### Evaluate MPG impact on Selected Output Stats, and Plot "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 175,
+   "id": "d1c4f91f",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "*********************************\n",
+      "The PER for DeMarcus Cousins (C, 2012)\n",
+      "Training Score: 0.983\n",
+      "Testing Score: 0.977\n",
+      "Importance (Highest): USG%(0.758)\n",
+      "Importance (MPG): (0.078)\n",
+      "*********************************\n",
+      "*********************************\n",
+      "The WS for DeMarcus Cousins (C, 2012)\n",
+      "Training Score: 0.981\n",
+      "Testing Score: 0.973\n",
+      "Importance (Highest): OWS(0.862)\n",
+      "Importance (MPG): (0.096)\n",
+      "*********************************\n",
+      "*********************************\n",
+      "The WS48 for DeMarcus Cousins (C, 2012)\n",
+      "Training Score: 0.602\n",
+      "Testing Score: 0.344\n",
+      "Importance (Highest): OWS(1.164)\n",
+      "Importance (MPG): (0.611)\n",
+      "*********************************\n",
+      "*********************************\n",
+      "The BPM for DeMarcus Cousins (C, 2012)\n",
+      "Training Score: 0.937\n",
+      "Testing Score: 0.896\n",
+      "Importance (Highest): APG(0.523)\n",
+      "Importance (MPG): (0.080)\n",
+      "*********************************\n",
+      "*********************************\n",
+      "The VORP for DeMarcus Cousins (C, 2012)\n",
+      "Training Score: 0.974\n",
+      "Testing Score: 0.951\n",
+      "Importance (Highest): PPG(1.170)\n",
+      "Importance (MPG): (0.066)\n",
+      "*********************************\n"
+     ]
+    },
+    {
+     "data": {
+      "text/plain": [
+       "<Figure size 432x288 with 0 Axes>"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "from random import randrange\n",
+    "rand = randrange(1, 1000)\n",
+    "\n",
+    "for j in range(0,len(output_list)-1):\n",
+    "        \n",
+    "    output = nba_y.columns[j]\n",
+    "    output_data = nba_y.iloc[:,j]\n",
+    "\n",
+    "    ### Building X and y dataframe \n",
+    "\n",
+    "    # Defining inputs\n",
+    "    X = nba_X\n",
+    "\n",
+    "    # Defining outputs\n",
+    "    y = output_data.values.reshape(-1)\n",
+    "    \n",
+    "    print(\"*********************************\")\n",
+    "    Regressor(X,y)\n",
+    "    print(\"*********************************\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "3b0f274c",
+   "metadata": {},
+   "source": [
+    "# League Mean Data "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 176,
+   "id": "e057945e",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "mean_data = nba_2018_prod[nba_2018_prod['Player'] == \"NBA Mean\"].drop(columns=[\"Player\"])"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "3b6fa3f7",
+   "metadata": {},
+   "source": [
+    "# Production "
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "bdba0ce6",
+   "metadata": {},
+   "source": [
+    "#### Enter player name  "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 177,
+   "id": "7432c048",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "player = \"DeMarcus Cousins\""
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "f508389f",
+   "metadata": {},
+   "source": [
+    "### Setting dataset for Production "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 178,
+   "id": "85cb7a5d",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>MPG</th>\n",
+       "      <th>Age</th>\n",
+       "      <th>G</th>\n",
+       "      <th>GS</th>\n",
+       "      <th>PPG</th>\n",
+       "      <th>RPG</th>\n",
+       "      <th>APG</th>\n",
+       "      <th>SPG</th>\n",
+       "      <th>BPG</th>\n",
+       "      <th>TOPG</th>\n",
+       "      <th>FG</th>\n",
+       "      <th>FG%</th>\n",
+       "      <th>3P</th>\n",
+       "      <th>3P%</th>\n",
+       "      <th>FT</th>\n",
+       "      <th>FT%</th>\n",
+       "      <th>PFPG</th>\n",
+       "      <th>TS%</th>\n",
+       "      <th>USG%</th>\n",
+       "      <th>OWS</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>5572</th>\n",
+       "      <td>25.7</td>\n",
+       "      <td>28.0</td>\n",
+       "      <td>30.0</td>\n",
+       "      <td>30.0</td>\n",
+       "      <td>16.3</td>\n",
+       "      <td>8.2</td>\n",
+       "      <td>3.6</td>\n",
+       "      <td>1.3</td>\n",
+       "      <td>1.5</td>\n",
+       "      <td>2.4</td>\n",
+       "      <td>5.9</td>\n",
+       "      <td>0.48</td>\n",
+       "      <td>0.9</td>\n",
+       "      <td>0.274</td>\n",
+       "      <td>3.5</td>\n",
+       "      <td>0.736</td>\n",
+       "      <td>3.6</td>\n",
+       "      <td>0.562</td>\n",
+       "      <td>28.1</td>\n",
+       "      <td>0.9</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "       MPG   Age     G    GS   PPG  RPG  APG  SPG  BPG  TOPG   FG   FG%   3P  \\\n",
+       "5572  25.7  28.0  30.0  30.0  16.3  8.2  3.6  1.3  1.5   2.4  5.9  0.48  0.9   \n",
+       "\n",
+       "        3P%   FT    FT%  PFPG    TS%  USG%  OWS  \n",
+       "5572  0.274  3.5  0.736   3.6  0.562  28.1  0.9  "
+      ]
+     },
+     "execution_count": 178,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "player_prod = nba_2018_prod[nba_2018_prod['Player'] == player].drop(columns=[\"Player\"])\n",
+    "player_prod"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 179,
+   "id": "1de8921a",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "25.7"
+      ]
+     },
+     "execution_count": 179,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Setting Players actual MPG value\n",
+    "v = player_prod['MPG'].values[0]\n",
+    "v"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "7184b92b",
+   "metadata": {},
+   "source": [
+    "### Evaluate MPG impact on Selected Output Stats, and Plot "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 184,
+   "id": "12bf9d8e",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Evaluated PER for DeMarcus Cousins (2018)\n",
+      "Evaluated WS for DeMarcus Cousins (2018)\n",
+      "Evaluated WS48 for DeMarcus Cousins (2018)\n",
+      "Evaluated BPM for DeMarcus Cousins (2018)\n",
+      "Evaluated VORP for DeMarcus Cousins (2018)\n"
+     ]
+    },
+    {
+     "data": {
+      "text/plain": [
+       "<Figure size 432x288 with 0 Axes>"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "for j in range(0,len(output_list)-1):\n",
+    "    \n",
+    "    output = nba_y.columns[j]\n",
+    "    output_data = nba_y.iloc[:,j]\n",
+    "\n",
+    "    ### Building X and y dataframe \n",
+    "\n",
+    "    # Defining inputs\n",
+    "    X_prod_2018 = player_prod\n",
+    "    \n",
+    "    ### LOAD Model\n",
+    "\n",
+    "    model_NBA_load = load(f'Model/model_NBA_{output}.joblib') \n",
+    "    \n",
+    "    pos = player_prod.iloc[0,2]\n",
+    "    print(f'Evaluated {output} for {player} (2018)')\n",
+    "\n",
+    "    ### Scaling data \n",
+    "\n",
+    "    # Create a StandardScaler model and fit it to the training data\n",
+    "    X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=rand)\n",
+    "    X_scaler = StandardScaler().fit(X_train)\n",
+    "    \n",
+    "    ### Running the MPG Loop\n",
+    "\n",
+    "    max_mpg = int(nba_X[\"MPG\"].max())\n",
+    "    PER_list = list()\n",
+    "    PER_mean_list = list()\n",
+    "    \n",
+    "    # Building predictions based on each minute of MPG\n",
+    "    for i in range(7,max_mpg+1):\n",
+    "        \n",
+    "        # Gathering player data\n",
+    "        player_prod[\"MPG\"] = i\n",
+    "        X_player_scaled_2018 = X_scaler.transform(player_prod)\n",
+    "        y_player_2018 = model_NBA_load.predict(X_player_scaled_2018)\n",
+    "\n",
+    "        PER_list.append(y_player_2018[0])\n",
+    "        \n",
+    "        # Gathering NBA MEAN data\n",
+    "        mean_data[\"MPG\"] = i\n",
+    "        mean_data_scaled_2018 = X_scaler.transform(mean_data)\n",
+    "        y_mean_2018 = model_NBA_load.predict(mean_data_scaled_2018)\n",
+    "\n",
+    "        PER_mean_list.append(y_mean_2018[0])\n",
+    "\n",
+    "    ### PLOT THE RESULTS\n",
+    "\n",
+    "    \n",
+    "    plt.scatter(range(7,max_mpg+1), PER_list, c=\"blue\", label=f\"{output} by Minute\")\n",
+    "    plt.scatter(range(7,max_mpg+1), PER_mean_list, c=\"red\", label=f\"League {output} by Minute\")\n",
+    "    plt.vlines(v, min(min(PER_list),min(PER_mean_list)), max(max(PER_list),max(PER_mean_list)), label=f'{player} MPG')\n",
+    "    plt.legend()\n",
+    "    plt.title(f\"2018 - MPG vs. {output} for {player}\")\n",
+    "    plt.savefig(fname=f\"Figures/{output}_for_{player}\",facecolor=\"lightsteelblue\")\n",
+    "\n",
+    "    ### Clear the figure for loop\n",
+    "    \n",
+    "    plt.clf()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "2699f3b7",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.8.8"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
